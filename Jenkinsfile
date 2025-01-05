@@ -7,6 +7,7 @@ pipeline {
         JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
         MAVEN_HOME = '/usr/share/maven'
         PATH = "${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${env.PATH}"
+        SONAR_TOKEN = credentials('SONAR_TOKEN') // Store token in Jenkins credentials
     }
 
     stages {
@@ -35,6 +36,31 @@ pipeline {
                  script {
                      checkout_build_run.testbuild()
                  }
+            }
+        }
+
+        stage('SonarCloud Analysis') {
+            steps {
+                withSonarQubeEnv('SonarCloud') {
+                    sh '''
+                    mvn sonar:sonar \
+                      -Dsonar.projectKey=phaninandigam_project1 \
+                      -Dsonar.organization=phaninandigam \
+                      -Dsonar.host.url=https://sonarcloud.io \
+                      -Dsonar.login=$SONAR_TOKEN
+                    '''
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                script {
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                }
             }
         }
 
