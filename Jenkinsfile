@@ -12,7 +12,9 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-               checkoutCode()
+               script {
+                     checkout_build_run.testcheckout()
+                 }
             }
         }
 
@@ -44,7 +46,9 @@ pipeline {
 
         stage('Run Application') {
             steps {
-                runApplication()
+                script {
+                     checkout_build_run.testrun()
+                 }
             }
         }
 
