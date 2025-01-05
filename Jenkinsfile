@@ -30,7 +30,9 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                 buildProject()
+                 script {
+                     checkout_build_run.build()
+                 }
             }
         }
 
