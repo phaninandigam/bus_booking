@@ -13,7 +13,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                script {
-                     checkout_build_run.testcheckout()
+                     pipeline.testcheckout()
                  }
             }
         }
