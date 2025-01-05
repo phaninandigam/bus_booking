@@ -32,7 +32,7 @@ pipeline {
             steps {
                  script {
                             checkout_build_run.build()
-                }
+                 }
             }
         }
 
